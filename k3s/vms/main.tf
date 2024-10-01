@@ -6,10 +6,10 @@ terraform {
     }
   }
   backend "azurerm" {
-    resource_group_name  = "rg-homelab"
-    storage_account_name = "ramenshophomelab"
-    container_name       = "k3stfstate"
-    key                  = "homelab.k3s.terraform.tfstate"
+    resource_group_name  = var.resource_group_name
+    storage_account_name = var.storage_account_name
+    container_name       = var.container_name
+    key                  = var.tfstate_key
   }
 }
 
