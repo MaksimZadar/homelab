@@ -1,11 +1,19 @@
 # Homelab Setup
-This is my homelab setup repo. This contains all the IaC code (I'm using OpenTofu, but Terraform should work) as well 
+This is my proxmox homelab setup repo. This contains all the IaC code (I'm using OpenTofu, but Terraform should work) as well 
 as Ansible playbooks to setup the vms. 
 
 ## Requirements
 1. You will need either [OpenTofu](https://opentofu.org/docs/intro/install/) or [Terraform](https://developer.hashicorp.com/terraform/install) installed
 2. You will need [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html) installed
 3. You will also need [Git](https://git-scm.com/downloads) installed
+4. Obviously you will need a [Proxmox](https://www.proxmox.com/en/proxmox-virtual-environment/get-started) server running or you can adapt this to use any other provider
+
+## Useful Links
+- [Proxmox Terraform Provider](https://registry.terraform.io/providers/Telmate/proxmox/latest/docs)
+- [Proxmox Docs](https://pve.proxmox.com/pve-docs/)
+- [Ansible Docs](https://docs.ansible.com/ansible/latest/getting_started/index.html)
+- [OpenTofu Docs](https://opentofu.org/docs/intro/)
+- [Terraform Docs](https://developer.hashicorp.com/terraform/docs)
 
 ## Getting started
 1. Clone the repo to a desired location: `cd ~/your/dir && git clone https://github.com/MaksimZadar/homelab`
