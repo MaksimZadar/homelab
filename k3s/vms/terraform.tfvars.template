@@ -1,0 +1,10 @@
+# Proxmox config
+pm_api_url = "https://{ IP / hostname to proxomox }:8006/api2/json"
+pm_api_token_id = "{ token ID (ex: tofu@pve!tofu-token) }"
+pm_api_token_secret = "{ token secret }"
+
+# Backend Config
+resource_group_name = "{ resource group name }"
+container_name = "{ azure blob container }"
+storage_account_name = "{ storage account name }"
+tfstate_key = "{ tfstate file key }"
