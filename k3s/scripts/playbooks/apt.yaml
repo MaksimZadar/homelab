@@ -1,0 +1,9 @@
+- name: "apt update k3s masters"
+  hosts: "*"
+  become: true
+  tasks:
+    - name: "apt update"
+      apt:
+        autoremove: true
+        upgrade: "yes"
+        update_cache: true
