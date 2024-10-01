@@ -16,7 +16,8 @@ as Ansible playbooks to setup the vms.
 - [Terraform Docs](https://developer.hashicorp.com/terraform/docs)
 
 ## Getting started
-1. Clone the repo to a desired location: `cd ~/your/dir && git clone https://github.com/MaksimZadar/homelab`
+1. Fork this repository on github
+2. Clone your fork to a desired location: `cd ~/your/dir && git clone https://github.com/{ your github name }/homelab`
 
 ### Get started with k3s
 1. `cd` to `/k3s/vms`
