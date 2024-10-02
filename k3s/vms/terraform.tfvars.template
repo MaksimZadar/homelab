@@ -2,8 +2,34 @@
 pm_api_url = "https://{ IP / hostname to proxomox }:8006/api2/json"
 pm_api_token_id = "{ token ID (ex: tofu@pve!tofu-token) }"
 pm_api_token_secret = "{ token secret }"
+pm_tls_insecure = false / true
+proxmox_template_name = "{ template name }"
+proxmox_node = "{ node name }"
+proxmox_vm_disk_location = "{ storage name }"
+proxmox_vm_cloudinit_location = "{ storage name }"
+gateway_ip = "{ gateway IP }"
 
-# Backend Config
+## K3S Master Config
+k3s_master_ips = [ "192.168.0.60", ... ] # The number of IPs determines how many VMs it will create
+k3s_master_disk_size = "32G"
+k3s_master_cpu_cores = 2
+k3s_master_cpu_sockets = 1
+k3s_master_memory = 1024
+k3s_master_emulate_ssd = true / false
+k3s_master_user = "{ username }"
+k3s_agent_ssh_keys = "{ your public ssh key }"
+
+## K3S Agent Config
+k3s_agent_ips = [ "192.168.0.50", ... ] # The number of IPs determines how many VMs it will create
+k3s_agent_disk_size = "32G"
+k3s_agent_cpu_cores = 2
+k3s_agent_cpu_sockets = 1
+k3s_agent_memory = 1024
+k3s_agent_emulate_ssd = true / false
+k3s_agent_user = "{ username }"
+k3s_master_ssh_keys = "{ your public ssh key }"
+
+# Azure Backend Config
 resource_group_name = "{ resource group name }"
 container_name = "{ azure blob container }"
 storage_account_name = "{ storage account name }"
