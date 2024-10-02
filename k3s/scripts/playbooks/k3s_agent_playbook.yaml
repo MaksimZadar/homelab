@@ -1,0 +1,9 @@
+---
+- name: Setup K3S Masters
+  hosts: k3s_agents
+  become: true
+
+  tasks:
+    - name: apt update
+      ansible.builtin.include_tasks:
+        file: ./tasks/apt-update.yaml

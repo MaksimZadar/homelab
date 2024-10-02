@@ -1,9 +1,0 @@
-- name: "apt update all hosts"
-  hosts: "*"
-  become: true
-  tasks:
-    - name: "apt update"
-      apt:
-        autoremove: true
-        upgrade: "yes"
-        update_cache: true
