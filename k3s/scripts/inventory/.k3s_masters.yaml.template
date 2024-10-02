@@ -1,9 +1,21 @@
-k3s_masters:
+k3s_main:
   hosts:
     host1:
       ansible_host: 192.168.0.60
+  vars:
+    ansible_user: { username }
+    k3s_token: "{ token }"
+    k3s_api_load_balancer_ip: "{ load balancer ip }"
+
+k3s_masters:
+  hosts:
     host2:
       ansible_host: 192.168.0.61
+    host3:
+      ansible_host: 192.168.0.62
     ...
   vars:
     ansible_user: { username }
+    k3s_token: { token for k3s registration }
+    k3s_main_node_ip: "{ ip of host1 }"
+    k3s_api_load_balancer_ip: "{ load balancer ip }"
