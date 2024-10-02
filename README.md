@@ -39,8 +39,20 @@ Ansible allows us to quickly automate tasks on the VMs we created.
 1. To get the IP addresses of the machine you just created run the following command
 
 ```bash
-tofu output -json | jq '. | { master_ips: .k3s_master_ips.value, agent_ips: .k3s_agent_ips.value}'
+cd /vms && tofu output -json | jq '. | { master_ips: .k3s_master_ips.value, agent_ips: .k3s_agent_ips.value}' && cd ..
 ```
 
-2. Update `inventory/k3s_masters.yaml` and `inventory/k3s_agents.yaml` to point to your hosts (using the IPs above) 
-and update the `ansible_user` field to be the user on your VMs (set in `k3s_master_user / k3s_agent_user` variables in `terraform.tfvars`)
+2. Create `k3s/scripts/inventory/k3s_masters.yaml` and `k3s/scripts/inventory/k3s_agents.yaml` from the templates to point to your hosts (using the IPs above)
+3. Update the `ansible_user` field in previous files to be the user on your VMs (set in `k3s_master_user / k3s_agent_user` variables in `terraform.tfvars`)
+4. Run the ansible ping command to verify Ansible can connect to your hosts:
+```bash
+cd scripts && ansible all -i inventory -m ping && cd ..
+```
+5. Run the playbook for K3S masters first:
+```bash
+cd scripts && ansible-playbook ./playbooks/k3s_master_playbook.yaml -i ./inventory && cd ..
+```
+6. Then for K3S agents:
+```bash
+cd scripts && ansible-playbook ./playbooks/k3s_agent_playbook.yaml -i ./inventory && cd ..
+```
