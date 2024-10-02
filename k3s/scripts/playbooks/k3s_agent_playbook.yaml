@@ -7,3 +7,6 @@
     - name: apt update
       ansible.builtin.include_tasks:
         file: ./tasks/apt-update.yaml
+    - name: install k3s
+      ansible.builtin.include_tasks:
+        file: ./tasks/agents/k3s-install.yaml

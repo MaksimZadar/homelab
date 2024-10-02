@@ -1,0 +1,7 @@
+- name: get service facts
+  ansible.builtin.service_facts:
+  
+- name: install k3s and add to cluser
+  when: ansible_facts.services["k3s-agent.service"] is not defined
+  ansible.builtin.shell:
+    cmd: "curl -sfL https://get.k3s.io | K3S_TOKEN={{cluster_token}} sh -s - agent --server https://{{load_balancer_ip}}:6443"
