@@ -1,9 +1,17 @@
 ---
 - name: Setup K3S Masters
-  hosts: k3s_masters
+  hosts: k3s_main:k3s_masters
   become: true
 
   tasks:
     - name: apt update
       ansible.builtin.include_tasks:
         file: ./tasks/apt-update.yaml
+    - name: install k3s on main master
+      when: inventory_hostname in groups['k3s_main']
+      ansible.builtin.include_tasks:
+        file: ./tasks/masters/install-k3s-on-main.yaml
+    - name: install k3s on other masters
+      when: inventory_hostname in groups['k3s_masters']
+      ansible.builtin.include_tasks:
+        file: ./tasks/masters/install-k3s-on-masters.yaml

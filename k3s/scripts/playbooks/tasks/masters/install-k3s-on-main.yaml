@@ -1,0 +1,7 @@
+- name: get service facts
+  ansible.builtin.service_facts:
+  
+- name: install k3s
+  when: ansible_facts.services["k3s.service"] is not defined
+  ansible.builtin.shell:
+    cmd: "curl -sfL https://get.k3s.io | K3S_TOKEN={{k3s_token}} sh -s - server --cluster-init --tls-san={{k3s_api_load_balancer_ip}}"
