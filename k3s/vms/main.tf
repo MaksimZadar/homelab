@@ -30,7 +30,7 @@ resource "proxmox_vm_qemu" "kappn" {
     ipconfig0 = "ip=10.17.17.${50 + count.index}/24,gw=10.17.17.1" # Change these to match your internal IP / gateway
     # vmid = ${ 1000 + count.index } optionally you can set a VM ID for proxmox here
 
-    clone = "ubuntu-jammy-cloud"
+    clone = "ubuntu-jammy-cloud" # Change this to be the name of your VM template
     os_type = "cloud-init"
     full_clone = true
     memory = 4096
@@ -70,7 +70,7 @@ resource "proxmox_vm_qemu" "gulliver" {
     ipconfig0 = "ip=10.17.17.${55 + count.index}/24,gw=10.17.17.1" # Change these to match your internal IP / gateway
     # vmid = ${ 1000 + count.index } optionally you can set a VM ID for proxmox here
 
-    clone = "ubuntu-jammy-cloud"
+    clone = "ubuntu-jammy-cloud" # Change this to be the name of your VM template
     os_type = "cloud-init"
     full_clone = true
     memory = 4096
