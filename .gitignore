@@ -1,2 +1,3 @@
 k3s/vms/.terraform
 k3s/vms/terraform.tfvars
+k3s/scripts/inventory/*.yaml

@@ -1,8 +1,0 @@
-k3s_masters:
-  hosts:
-    kappn-1:
-      ansible_host: kappn1
-    kappn-2:
-      ansible_host: kappn2
-  vars:
-    ansible_user: maxz
