@@ -1,4 +1,4 @@
-- name: "apt update k3s masters"
+- name: "apt update all hosts"
   hosts: "*"
   become: true
   tasks:
