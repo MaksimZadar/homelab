@@ -1,0 +1,9 @@
+k3s_agents:
+  hosts:
+    host1:
+      ansible_host: 192.168.0.50
+    host2:
+      ansible_host: 192.168.0.51
+    ...
+  vars:
+    ansible_user: { username }

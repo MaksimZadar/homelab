@@ -1,0 +1,9 @@
+k3s_masters:
+  hosts:
+    host1:
+      ansible_host: 192.168.0.60
+    host2:
+      ansible_host: 192.168.0.61
+    ...
+  vars:
+    ansible_user: { username }
