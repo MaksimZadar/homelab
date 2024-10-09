@@ -1,0 +1,14 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: cert-production
+  namespace: kubernetes-dashboard
+spec:
+  secretName: cert-production-tls
+  issuerRef:
+    name: letsencrypt-production
+    kind: ClusterIssuer
+  commonName: "*.local.yoursite.com"
+  dnsNames:
+    - "local.yoursite.com"
+    - "*.local.yoursite.com"
