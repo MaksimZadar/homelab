@@ -1,0 +1,61 @@
+services:
+  zitadel:
+    container_name: 'zitadel'
+    restart: 'always'
+    networks:
+      - 'zitadel'
+      - 'proxy'
+    image: 'ghcr.io/zitadel/zitadel:latest'
+    command: 'start-from-init --masterkey "${ZITADEL_MASTER_KEY}" --tlsMode external'
+    environment:
+      ZITADEL_EXTERNALDOMAIN: ${ZITADEL_DOMAIN}
+      ZITADEL_DATABASE_POSTGRES_HOST: zitadel-db
+      ZITADEL_DATABASE_POSTGRES_PORT: 5432
+      ZITADEL_DATABASE_POSTGRES_DATABASE: ${ZITADEL_PG_DB}
+      ZITADEL_DATABASE_POSTGRES_USER_USERNAME: ${ZITADEL_PG_USER}
+      ZITADEL_DATABASE_POSTGRES_USER_PASSWORD: ${ZITADEL_PG_PASS}
+      ZITADEL_DATABASE_POSTGRES_USER_SSL_MODE: disable
+      ZITADEL_DATABASE_POSTGRES_ADMIN_USERNAME: ${PG_USER}
+      ZITADEL_DATABASE_POSTGRES_ADMIN_PASSWORD: ${PG_PASS}
+      ZITADEL_DATABASE_POSTGRES_ADMIN_SSL_MODE: disable
+      ZITADEL_EXTERNALSECURE: true
+    depends_on:
+      zitadel-db:
+        condition: 'service_healthy'
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.zitadel.entrypoints=http"
+      - "traefik.http.routers.zitadel.rule=Host(`${ZITADEL_DOMAIN}`)"
+      - "traefik.http.middlewares.zitadel-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.routers.zitadel.middlewares=zitadel-https-redirect"
+      - "traefik.http.routers.zitadel-secure.entrypoints=https"
+      - "traefik.http.routers.zitadel-secure.rule=Host(`${ZITADEL_DOMAIN}`)"
+      - "traefik.http.routers.zitadel-secure.tls=true"
+      - "traefik.http.routers.zitadel-secure.service=zitadel"
+      - "traefik.http.services.zitadel.loadbalancer.server.scheme=h2c"
+      - "traefik.http.services.zitadel.loadbalancer.passHostHeader=true"
+      - "traefik.http.services.zitadel.loadbalancer.server.port=8080"
+      - "traefik.docker.network=proxy"
+      - "traefik.http.routers.zitadel-secure.tls.certresolver=cloudflare"
+      - "traefik.http.routers.zitadel-secure.tls.domains[1].main=${TLS_DOMAIN}"
+      - "traefik.http.routers.zitadel-secure.tls.domains[1].sans=*.${TLS_DOMAIN}"
+
+  zitadel-db:
+    restart: 'always'
+    image: postgres:16-alpine
+    environment:
+      PGUSER: ${PG_USER}
+      POSTGRES_PASSWORD: ${PG_PASS}
+    networks:
+      - 'zitadel'
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready", "-d", "zitadel", "-U", "postgres"]
+      interval: '10s'
+      timeout: '30s'
+      retries: 5
+      start_period: '20s'
+
+networks:
+  zitadel:
+  proxy:
+    external: true

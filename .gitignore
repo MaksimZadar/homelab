@@ -1,3 +1,8 @@
 k3s/vms/.terraform
 k3s/vms/terraform.tfvars
 k3s/scripts/inventory/*.yaml
+
+*/**/.env
+docker/traefik/config.yml
+docker/traefik/traefik.yml
+docker/traefik/acme.json
