@@ -1,0 +1,35 @@
+# Proxmox Settings
+pm_api_url = "https://{ proxmox ip }:8006/api2/json"
+pm_api_token_id = "{ token id }"
+pm_api_token_secret = "{ token secret }"
+pm_tls_insecure = true / false
+docker_prod_proxmox_node = "{ proxmox node name }"
+docker_prod_disk_location = "{ disk name }"
+
+## Prod VM Settings
+docker_prod_hostname = "{ lxc host name }"
+docker_prod_lxc_description = "{ description }"
+docker_prod_os_template = "local:vztmpl/debian-12-standard_12.7-1_amd64.tar.zst"
+docker_prod_tags="docker;prod"
+docker_prod_network_ip = "dhcp"
+docker_prod_network_name = "eth0"
+docker_prod_network_bridge = "vmbr0"
+docker_prod_network_hwaddr = "{ mac address }"
+docker_prod_start = true / false
+docker_prod_onboot = true / false
+docker_prod_disk_size = "20G"
+docker_prod_memory = "8192"
+docker_prod_swap = "4096"
+docker_prod_cpu_cores = "4"
+docker_prod_password = "{ password }"
+docker_prod_ssh_keys = <<EOF
+ssh-ed25519 ...
+ssh-ed25519 ...
+ssh-ed25519 ...
+EOF
+
+# Azure backend settings
+az_resource_group_name = "{ resource group name }"
+az_storage_account_name = "{ storage account name }"
+az_container_name = "{ container name }"
+az_tfstate_key = "{ blob key }"

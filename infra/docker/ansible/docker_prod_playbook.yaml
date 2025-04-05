@@ -1,0 +1,12 @@
+---
+- name: Setup Docker LXC
+  hosts: docker_prod
+  become: true
+
+  tasks:
+    - name: apt update
+      ansible.builtin.include_tasks:
+        file: ./tasks/apt-update.yaml
+    - name: install docker
+      ansible.builtin.include_tasks:
+        file: ./tasks/install-docker.yaml

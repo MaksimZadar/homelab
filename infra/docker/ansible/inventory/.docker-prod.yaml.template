@@ -1,0 +1,7 @@
+docker-prod:
+  hosts:
+    host1:
+      ansible_host: 192.168.1.10
+
+  vars:
+    ansible_user: root
