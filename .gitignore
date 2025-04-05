@@ -1,6 +1,7 @@
-k3s/vms/.terraform
-k3s/vms/terraform.tfvars
+*/**/.terraform
+*/**/terraform.tfvars
 k3s/scripts/inventory/*.yaml
+infra/docker/ansible/inventory/*.yaml
 
 */**/.env
 docker/traefik/config.yml
