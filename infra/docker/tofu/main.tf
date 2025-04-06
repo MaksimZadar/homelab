@@ -50,6 +50,10 @@ resource "proxmox_lxc" "docker_prod" {
       size    = var.docker_prod_disk_size
     }
 
+    features {
+      nesting = true
+    }
+
     lifecycle {
         ignore_changes = [
             network,
