@@ -26,7 +26,7 @@ resource "proxmox_lxc" "docker_prod" {
     ostemplate   = var.docker_prod_os_template
     description = var.docker_prod_lxc_description
     password = var.docker_prod_password
-    unprivileged = true
+    unprivileged = var.docker_prod_unprivileged
     tags = var.docker_prod_tags
 
     ssh_public_keys = var.docker_prod_ssh_keys

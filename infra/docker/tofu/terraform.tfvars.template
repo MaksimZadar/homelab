@@ -22,6 +22,7 @@ docker_prod_memory = "8192"
 docker_prod_swap = "4096"
 docker_prod_cpu_cores = "4"
 docker_prod_password = "{ password }"
+docker_prod_unprivileged = false / true
 docker_prod_ssh_keys = <<EOF
 ssh-ed25519 ...
 ssh-ed25519 ...

@@ -86,6 +86,10 @@ variable "docker_prod_password" {
   type = string
 }
 
+variable "docker_prod_unprivileged" {
+  type = bool
+}
+
 variable "docker_prod_ssh_keys" {
   type = string
 }
