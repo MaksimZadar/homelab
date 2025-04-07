@@ -1,6 +1,9 @@
 services:
   traefik:
-    image: traefik:v3.2
+    image: zadar/traefik:${VERSION_TAG:-latest}
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: traefik
     security_opt:
       - no-new-privileges:true
@@ -17,9 +20,6 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - /root/traefik/data/traefik.yml:/traefik.yml:ro
-      - /root/traefik/data/acme.json:/acme.json
-      - /root/traefik/data/config.yml:/config.yml:ro
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.traefik.entrypoints=http"
@@ -39,4 +39,4 @@ services:
 
 networks:
   proxy:
-    external: true    
+    external: true
