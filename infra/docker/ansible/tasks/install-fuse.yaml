@@ -1,0 +1,6 @@
+- name: Install
+  apt:
+    name:
+      - fuse
+    state: latest
+    update_cache: true

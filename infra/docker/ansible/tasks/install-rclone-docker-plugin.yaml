@@ -1,0 +1,13 @@
+- name: Create a rclone config folder
+  file:
+    path: /var/lib/docker-plugins/rclone/config
+    state: directory
+
+- name: Create a rclone cache folder
+  file:
+    path: /var/lib/docker-plugins/rclone/cache
+    state: directory
+
+- name: Install rclone Docker plugin
+  command: >
+    docker plugin install rclone/docker-volume-rclone:amd64 args="-v" --alias rclone --grant-all-permissions

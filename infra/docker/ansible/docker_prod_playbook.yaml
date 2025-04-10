@@ -10,3 +10,9 @@
     - name: install docker
       ansible.builtin.include_tasks:
         file: ./tasks/install-docker.yaml
+    - name: install fuse
+      ansible.builtin.include_tasks:
+        file: ./tasks/install-fuse.yaml
+    - name: install rclone docker plugin
+      ansible.builtin.include_tasks:
+        file: ./tasks/install-rclone-docker-plugin.yaml
