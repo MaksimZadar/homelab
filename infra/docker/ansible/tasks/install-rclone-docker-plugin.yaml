@@ -8,6 +8,18 @@
     path: /var/lib/docker-plugins/rclone/cache
     state: directory
 
+- name: Check if rclone plugin is installed
+  shell: docker plugin ls --format "{{ '{{' }} .Name {{ '}}' }}" | grep rclone
+  register: rclone_check
+  changed_when: false
+
 - name: Install rclone Docker plugin
   command: >
     docker plugin install rclone/docker-volume-rclone:amd64 args="-v" --alias rclone --grant-all-permissions
+  when: rclone_check.stdout == ""
+
+- name: Create rclone config file
+  template:
+    src: rclone.conf.j2
+    dest: /var/lib/docker-plugins/rclone/config/rclone.conf
+    mode: "0600"

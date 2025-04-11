@@ -5,3 +5,10 @@ docker-prod:
 
   vars:
     ansible_user: root
+    rclone_type: s3
+    rclone_env_auth: false
+    rclone_provider: Minio
+    rclone_access_key: "access_key"
+    rclone_secret_key: "secret_key"
+    rclone_endpoint: "https://minio"
+    rclone_region: region

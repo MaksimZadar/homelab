@@ -1,0 +1,11 @@
+# {{ ansible_managed }}
+[minio]
+type = {{ rclone_type }}
+env_auth = {{ rclone_env_auth }}
+provider = {{ rclone_provider }}
+access_key_id = {{ rclone_access_key }}
+secret_access_key = {{ rclone_secret_key }}
+endpoint = {{ rclone_endpoint }}
+{% if rclone_region is defined %}
+region = {{ rclone_region }}
+{% endif %}
