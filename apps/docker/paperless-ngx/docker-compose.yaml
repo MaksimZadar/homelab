@@ -1,0 +1,91 @@
+services:
+  broker:
+    image: docker.io/library/redis:7
+    restart: unless-stopped
+    volumes:
+      - redisdata:/data
+    networks:
+      - paperless
+
+  db:
+    image: docker.io/library/postgres:17
+    restart: unless-stopped
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: ${PG_DB:-paperless}
+      POSTGRES_USER: ${PG_USER:-paperless}
+      POSTGRES_PASSWORD: ${PG_PASSWORD:-paperless}
+    networks:
+      - paperless
+
+  webserver:
+    image: ghcr.io/paperless-ngx/paperless-ngx:latest
+    restart: unless-stopped
+    depends_on:
+      - db
+      - broker
+      - gotenberg
+      - tika
+    volumes:
+      - data:/usr/src/paperless/data
+      - media:/usr/src/paperless/media
+      - ./export:/usr/src/paperless/export
+      - ./consume:/usr/src/paperless/consume
+    env_file: .env
+    environment:
+      PAPERLESS_REDIS: redis://broker:6379
+      PAPERLESS_DBHOST: db
+      PAPERLESS_DBUSER: ${PG_USER:-paperless}
+      PAPERLESS_DBPASS: ${PG_PASSWORD:-paperless}
+      PAPERLESS_TIKA_ENABLED: 1
+      PAPERLESS_TIKA_GOTENBERG_ENDPOINT: http://gotenberg:3000
+      PAPERLESS_TIKA_ENDPOINT: http://tika:9998
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=proxy
+      - traefik.http.routers.paperless-https.entrypoints=https
+      - traefik.http.routers.paperless-https.tls=true
+      - traefik.http.routers.paperless-https.rule=Host(`${PAPERLESS_DOMAIN}`)
+      - traefik.http.services.paperless.loadbalancer.server.port=8000
+      - traefik.http.routers.paperless-https.service=paperless
+      - traefik.http.routers.paperless-https.tls.certresolver=cloudflare
+    networks:
+      - proxy
+      - paperless
+
+  gotenberg:
+    image: docker.io/gotenberg/gotenberg:8.19
+    restart: unless-stopped
+
+    # The gotenberg chromium route is used to convert .eml files. We do not
+    # want to allow external content like tracking pixels or even javascript.
+    command:
+      - "gotenberg"
+      - "--chromium-disable-javascript=true"
+      - "--chromium-allow-list=file:///tmp/.*"
+    networks:
+      - paperless
+
+  tika:
+    image: docker.io/apache/tika:latest
+    restart: unless-stopped
+    networks:
+      - paperless
+
+volumes:
+  data:
+  # media: # uncomment this and comment the volume below out if not using s3 storage
+  media:
+    driver: rclone
+    driver_opts:
+      remote: "minio:paperless-ngx"
+      allow_other: "true"
+      vfs_cache_mode: "full"
+  pgdata:
+  redisdata:
+
+networks:
+  proxy:
+    external: true
+  paperless:
