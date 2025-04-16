@@ -1,0 +1,18 @@
+k3s_main:
+  hosts:
+    k3s-master-1:
+      ansible_host: k3s-master-1
+  vars:
+    ansible_user: username
+    k3s_token: "super secret token"
+
+k3s_masters:
+  hosts:
+    k3s-master-2:
+      ansible_host: k3s-master-2
+    k3s-master-3:
+      ansible_host: k3s-master-3
+  vars:
+    ansible_user: username
+    k3s_token: "super secret token"
+    k3s_main_node_ip: k3s-master-1

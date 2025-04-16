@@ -1,0 +1,18 @@
+---
+- name: "Uninstall K3S on master nodes"
+  hosts: k3s_main:k3s_masters
+  become: true
+
+  tasks:
+    - name: "run uninstaller"
+      ansible.builtin.shell: /usr/local/bin/k3s-uninstall.sh
+      ignore_errors: true
+
+- name: "Uninstall K3S on worker nodes"
+  hosts: k3s_workers
+  become: true
+
+  tasks:
+    - name: "run uninstaller"
+      ansible.builtin.shell: /usr/local/bin/k3s-agent-uninstall.sh
+      ignore_errors: true
