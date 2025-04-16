@@ -3,6 +3,9 @@
 k3s/scripts/inventory/*.yaml
 infra/docker/ansible/inventory/*.yaml
 
+infra/**/inventory/*.yaml
+infra/**/inventory/*.yml
+
 */**/.env
 apps/docker/traefik/config.yml
 apps/docker/traefik/traefik.yml
