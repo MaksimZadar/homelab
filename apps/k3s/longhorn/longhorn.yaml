@@ -5207,8 +5207,6 @@ spec:
           image: longhornio/longhorn-share-manager:v1.8.1
           command:
             ["sh", "-c", "echo share-manager image pulled && sleep infinity"]
-      nodeSelector:
-        storage: "true"
       volumes:
         - name: boot
           hostPath:
@@ -5305,8 +5303,6 @@ spec:
             - name: CSI_LIVENESS_PROBE_IMAGE
               value: "longhornio/livenessprobe:v2.15.0"
       priorityClassName: "longhorn-critical"
-      nodeSelector:
-        storage: "true"
       serviceAccountName: longhorn-service-account
       securityContext:
         runAsUser: 0
@@ -5367,8 +5363,6 @@ spec:
               value: "http://longhorn-backend:9500"
             - name: LONGHORN_UI_PORT
               value: "8000"
-      nodeSelector:
-        storage: "true"
       volumes:
         - emptyDir: {}
           name: nginx-cache
