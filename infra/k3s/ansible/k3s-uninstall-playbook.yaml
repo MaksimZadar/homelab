@@ -9,7 +9,7 @@
       ignore_errors: true
 
 - name: "Uninstall K3S on worker nodes"
-  hosts: k3s_workers
+  hosts: k3s_workers:k3s_storage
   become: true
 
   tasks:
