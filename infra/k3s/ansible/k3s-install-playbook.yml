@@ -27,3 +27,15 @@
     - name: install k3s on workers
       ansible.builtin.include_tasks:
         file: ./tasks/workers/install-k3s-on-workers.yaml
+
+- name: Setup K3S storage
+  hosts: k3s_storage
+  become: true
+
+  tasks:
+    - name: disable firewall
+      ansible.builtin.include_tasks:
+        file: ./tasks/disable-firwall.yaml
+    - name: install k3s on storage
+      ansible.builtin.include_tasks:
+        file: ./tasks/storage/install-k3s-on-storage.yaml
