@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: docmost-redis
+    app.kubernetes.io/instance: docmost-redis
+  name: docmost-redis
+  namespace: docmost
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: docmost-redis
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: docmost-redis
+    spec:
+      nodeSelector:
+        worker: "true"
+      containers:
+        - image: redis:7.2-alpine
+          name: docmost-redis
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - mountPath: /data
+              name: docmost-redis
+          ports:
+            - containerPort: 6379
+              name: redis-tcp
+              protocol: TCP
+      restartPolicy: Always
+      volumes:
+        - name: docmost-redis
+          persistentVolumeClaim:
+            claimName: docmost-redis
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: docmost-redis
+  namespace: docmost
+  name: docmost-redis
+spec:
+  selector:
+    app: docmost-redis
+  ports:
+    - protocol: TCP
+      port: 6379
+      targetPort: 6379
+  type: ClusterIP

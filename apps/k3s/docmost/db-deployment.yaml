@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: docmost-postgres
+    app.kubernetes.io/instance: docmost-postgres
+  name: docmost-postgres
+  namespace: docmost
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: docmost-postgres
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: docmost-postgres
+    spec:
+      nodeSelector:
+        worker: "true"
+      containers:
+        - env:
+            - name: POSTGRES_DB
+              value: docmost
+            - name: POSTGRES_PASSWORD
+              value: 761ba3d8c164c5002caecda69f89f1f1
+            - name: POSTGRES_USER
+              value: docmost
+          image: postgres:16-alpine
+          imagePullPolicy: IfNotPresent
+          name: docmost-postgres
+          ports:
+            - containerPort: 5432
+              name: postgress-tcp
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /var/lib/postgresql
+              name: docmost-postgres
+      restartPolicy: Always
+      volumes:
+        - name: docmost-postgres
+          persistentVolumeClaim:
+            claimName: docmost-postgres
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: docmost-postgres
+  namespace: docmost
+  name: docmost-postgres
+spec:
+  selector:
+    app: docmost-postgres
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432
+  type: ClusterIP

@@ -1,0 +1,81 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: docmost
+  name: docmost
+  namespace: docmost
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: docmost
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: docmost
+    spec:
+      nodeSelector:
+        worker: "true"
+      containers:
+        - env:
+            - name: APP_SECRET
+              value: 48d583315c9910bf656275871d9a1d5ed81af0b9801f8944e31c4e8d78f6bfe9
+            - name: APP_URL
+              value: https://docmost.k3s.zadar.family
+            - name: DATABASE_URL
+              value: postgresql://docmost:761ba3d8c164c5002caecda69f89f1f1@docmost-postgres:5432/docmost?schema=public
+            - name: REDIS_URL
+              value: redis://docmost-redis:6379
+          image: docmost/docmost:latest
+          name: docmost
+          ports:
+            - containerPort: 3000
+              name: docmost-http
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /app/data/storage
+              name: docmost
+      restartPolicy: Always
+      volumes:
+        - name: docmost
+          persistentVolumeClaim:
+            claimName: docmost
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: docmost
+  namespace: docmost
+  name: docmost
+spec:
+  selector:
+    app: docmost
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
+  type: ClusterIP
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: docmost-ingress
+  namespace: docmost
+  annotations:
+    kubernetes.io/ingress.class: traefik
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`docmost.k3s.zadar.family`) # change to your domain
+      kind: Rule
+      services:
+        - name: docmost
+          port: 3000
+  tls:
+    secretName: zadar-family-tls # change to your cert name
