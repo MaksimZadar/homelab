@@ -10,3 +10,6 @@ infra/**/inventory/*.yml
 apps/docker/traefik/config.yml
 apps/docker/traefik/traefik.yml
 apps/docker/traefik/acme.json
+apps/k3s/cert-manager/certificates/production-certificate.yaml
+apps/k3s/cert-manager/issuer/cloudflare-issuer-secret.yaml
+apps/k3s/cert-manager/issuer/cluster-issuer.yaml
