@@ -15,4 +15,4 @@ spec:
         - name: api@internal
           kind: TraefikService
   tls:
-    secretName: zadar-family-tls-test # change this to your secret!!!
+    secretName: zadar-family-tls # change this to your secret!!!
