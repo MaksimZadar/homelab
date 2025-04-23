@@ -74,3 +74,22 @@ variable "k3s_worker_nodes" {
     proxmox_vm_template_name = string
   }))
 }
+
+variable "k3s_storage_nodes" {
+  type = list(object({
+    name = string
+    disk_size = string
+    memory = number
+    cpu_cores = number
+    cpu_sockets = number
+    emulate_ssd = bool
+    user = string
+    password = string
+    ssh_keys = string
+    tags = string
+    proxmox_node = string
+    proxmox_disk_location = string
+    proxmox_cloudinit_location = string
+    proxmox_vm_template_name = string
+  }))
+}
