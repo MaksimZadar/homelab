@@ -1,0 +1,5 @@
+hostname: rancher.k3s.zadar.family
+bootstrapPassword: "Pass!234"
+ingress:
+  tls:
+    source: rancher
