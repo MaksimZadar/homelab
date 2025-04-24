@@ -5,5 +5,5 @@ helm repo add emberstack https://emberstack.github.io/helm-charts
 
 helm repo update
 
-helm upgrade --install reflector --create-namespace --namespace traefik emberstack/reflector
+helm upgrade --install reflector --create-namespace --namespace reflector emberstack/reflector
 ```
