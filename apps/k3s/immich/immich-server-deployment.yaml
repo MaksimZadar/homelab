@@ -1,0 +1,92 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: immich-server
+  namespace: immich
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: immich-server
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: immich-server
+    spec:
+      nodeSelector:
+        worker: "true"
+      volumes:
+        - name: upload
+          persistentVolumeClaim:
+            claimName: immich-upload
+      containers:
+        - name: immich-server
+          image: ghcr.io/immich-app/immich-server:release
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - mountPath: /usr/src/app/upload
+              name: upload
+          resources:
+            requests:
+              memory: 500M
+              cpu: 500m
+            limits:
+              memory: 2G
+              cpu: 2000m
+          ports:
+            - containerPort: 2283
+          env:
+            - name: TZ
+              value: Australia/Adelaide
+            - name: DB_HOSTNAME
+              value: immich-database
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  key: username
+                  name: immich-db-user
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: immich-db-password
+            - name: DB_DATABASE_NAME
+              value: immich
+            - name: REDIS_HOSTNAME
+              value: immich-redis
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: immich-server
+  namespace: immich
+spec:
+  selector:
+    app: immich-server
+  ports:
+    - port: 2283
+      targetPort: 2283
+  type: ClusterIP
+
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: immich-ingress
+  namespace: immich
+  annotations:
+    kubernetes.io/ingress.class: traefik
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`immich.k3s.zadar.family`) # change to your domain
+      kind: Rule
+      services:
+        - name: immich-server
+          port: 2283
+  tls:
+    secretName: zadar-family-tls # change to your cert name

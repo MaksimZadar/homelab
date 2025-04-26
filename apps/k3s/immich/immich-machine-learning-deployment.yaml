@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: immich-machine-learning
+  namespace: immich
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: immich-machine-learning
+  template:
+    metadata:
+      labels:
+        app: immich-machine-learning
+    spec:
+      volumes:
+        - name: model-cache
+          persistentVolumeClaim:
+            claimName: immich-model-cache
+      nodeSelector:
+        worker: "true"
+      containers:
+        - name: immich-machine-learning
+          image: ghcr.io/immich-app/immich-machine-learning:release
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3003
+          resources:
+            requests:
+              cpu: 500m
+              memory: 125M
+            limits:
+              cpu: 2000m
+              memory: 3G
+          volumeMounts:
+            - mountPath: /cache
+              name: model-cache
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: immich-machine-learning
+  namespace: immich
+spec:
+  selector:
+    app: immich-machine-learning
+  ports:
+    - port: 3003
+      targetPort: 3003
+  type: ClusterIP

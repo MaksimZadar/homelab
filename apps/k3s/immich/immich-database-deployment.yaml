@@ -1,0 +1,88 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: immich-database
+  namespace: immich
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: immich-database
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: immich-database
+    spec:
+      nodeSelector:
+        worker: "true"
+      volumes:
+        - name: immich-database
+          persistentVolumeClaim:
+            claimName: immich-database
+      containers:
+        - name: immich-database
+          args:
+            - postgres
+            - -c
+            - shared_preload_libraries=vectors.so
+            - -c
+            - search_path="$(user)", public, vectors
+            - -c
+            - logging_collector=on
+            - -c
+            - max_wal_size=2GB
+            - -c
+            - shared_buffers=512MB
+            - -c
+            - wal_compression=on
+          image: docker.io/tensorchord/pgvecto-rs:pg14-v0.2.0
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - mountPath: /var/lib/postgresql
+              name: immich-database
+          resources:
+            requests:
+              cpu: 500m
+              memory: 500M
+            limits:
+              cpu: 2000m
+              memory: 2G
+          livenessProbe:
+            exec:
+              command:
+                - pg_isready --dbname="${POSTGRES_DB}" --username="${POSTGRES_USER}" || exit 1; Chksum="$(psql --dbname="${POSTGRES_DB}" --username="${POSTGRES_USER}" --tuples-only --no-align --command='SELECT COALESCE(SUM(checksum_failures), 0) FROM pg_stat_database')"; echo "checksum failure count is $Chksum"; [ "$Chksum" = '0' ] || exit 1
+            initialDelaySeconds: 300
+            periodSeconds: 300
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  key: username
+                  name: immich-db-user
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: immich-db-password
+            - name: POSTGRES_DB
+              value: immich
+            - name: PGDATA
+              value: /var/lib/postgresql/data/pgdata
+            - name: POSTGRES_INITDB_ARGS
+              value: "--data-checksums"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: immich-database
+  namespace: immich
+spec:
+  selector:
+    app: immich-database
+  ports:
+    - port: 5432
+      targetPort: 5432
+  type: ClusterIP

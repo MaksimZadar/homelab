@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: volume-inspector
+  namespace: immich
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: volume-inspector
+  template:
+    metadata:
+      labels:
+        app: volume-inspector
+    spec:
+      volumes:
+        - name: upload
+          persistentVolumeClaim:
+            claimName: immich-upload
+      containers:
+        - name: volume-inspector
+          image: ubuntu
+          command:
+            [
+              "/bin/bash",
+              "-c",
+              "apt-get update && apt-get install -y procps curl vim && sleep infinity",
+            ]
+          volumeMounts:
+            - mountPath: /mnt/upload
+              name: upload
