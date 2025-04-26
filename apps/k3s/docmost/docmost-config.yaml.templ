@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: docmost-config-secret
+  namespace: docmost
+data:
+  DATABASE_URL: postgresql://postgres:super-cool-password@docmost-postgres:5432/docmost?schema=public
+  # ^ postgresql://<db_user>:<db_password>@docmost-postgres:5432/<db_name>?schema=public
+  APP_SECRET: super-cool-secret
