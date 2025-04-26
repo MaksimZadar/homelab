@@ -21,14 +21,13 @@ spec:
         worker: "true"
       containers:
         - env:
-            - name: APP_SECRET
-              value: 48d583315c9910bf656275871d9a1d5ed81af0b9801f8944e31c4e8d78f6bfe9
             - name: APP_URL
               value: https://docmost.k3s.zadar.family
-            - name: DATABASE_URL
-              value: postgresql://docmost:761ba3d8c164c5002caecda69f89f1f1@docmost-postgres:5432/docmost?schema=public
             - name: REDIS_URL
               value: redis://docmost-redis:6379
+          envFrom:
+            - configMapRef:
+                name: docmost-config-secret
           image: docmost/docmost:latest
           name: docmost
           ports:
@@ -38,7 +37,6 @@ spec:
           volumeMounts:
             - mountPath: /app/data/storage
               name: docmost
-      restartPolicy: Always
       volumes:
         - name: docmost
           persistentVolumeClaim:

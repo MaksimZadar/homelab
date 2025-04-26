@@ -12,7 +12,7 @@ spec:
     matchLabels:
       app: docmost-postgres
   strategy:
-    type: Recreate
+    type: RollingUpdate
   template:
     metadata:
       labels:
@@ -21,13 +21,12 @@ spec:
       nodeSelector:
         worker: "true"
       containers:
-        - env:
-            - name: POSTGRES_DB
-              value: docmost
-            - name: POSTGRES_PASSWORD
-              value: 761ba3d8c164c5002caecda69f89f1f1
-            - name: POSTGRES_USER
-              value: docmost
+        - envFrom:
+            - configMapRef:
+                name: db-config-secret
+          env:
+            - name: PGDATA
+              value: /var/lib/postgresql/data/pgdata
           image: postgres:16-alpine
           imagePullPolicy: IfNotPresent
           name: docmost-postgres
@@ -36,9 +35,8 @@ spec:
               name: postgress-tcp
               protocol: TCP
           volumeMounts:
-            - mountPath: /var/lib/postgresql
+            - mountPath: /var/lib/postgresql/data/
               name: docmost-postgres
-      restartPolicy: Always
       volumes:
         - name: docmost-postgres
           persistentVolumeClaim:
